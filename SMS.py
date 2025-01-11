@@ -26,12 +26,8 @@ class SMS:
         :return: list<dict>
         """
         # self.set_data_mode(1)
-        answer = await self.send_at(f'AT+CMGL="{message_type}"', "OK", TIMEOUT)
-        return (
-            self.parser.parse_sms(message_type)
-            if message_type == "ALL"
-            else self.parser.parse_sms(message_type, True)
-        )
+        answer = await self.send_at(f'AT+CMGL=4', "OK", TIMEOUT)
+        return self.parser.parse_pdu(answer)
 
     def read_message(self, message_type: str) -> list:
         """
