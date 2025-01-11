@@ -19,7 +19,7 @@ class SMS:
                 f"'{type(self).__name__}' object has no attribute '{name}'"
             )
 
-    async def receive_messages(self, message_type: str) -> list:
+    async def receive_messages(self) -> list:
         """
         Sends SMS command to AT
         :param message_type: str
