@@ -1,6 +1,6 @@
-from Globals import *
-from Utils import *
-from AT import *
+from .Globals import *
+from .Utils import *
+from .AT import *
 
 
 class Settings(metaclass=SingletonMeta):

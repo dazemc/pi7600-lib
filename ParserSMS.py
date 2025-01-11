@@ -1,5 +1,5 @@
 from datetime import datetime
-from Models import Messages
+from .Models import Messages
 from smspdudecoder.easy import read_incoming_sms
 
 class Parser:
