@@ -118,4 +118,4 @@ class Parser:
                 }
             )
 
-            return [Messages(**msg) for msg in msgs]
+        return [Messages(**msg) for msg in msgs]
