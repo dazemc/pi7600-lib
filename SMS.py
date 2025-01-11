@@ -1,5 +1,5 @@
 from pi7600.Settings import *
-import ParserSMS
+from .ParserSMS import *
 
 
 class SMS:
@@ -9,7 +9,7 @@ class SMS:
 
     def __init__(self):
         self.settings = Settings()
-        self.parser = ParserSMS()
+        self.parser = Parser()
 
     def __getattr__(self, name):
         try:

@@ -1,7 +1,7 @@
 import asyncio
 import serial
 import time
-from Globals import POLL
+from .Globals import POLL
 
 
 class AT:
