@@ -1,10 +1,10 @@
-import AT
-import Globals
-import GPS
-import ParserSMS
-import Phone
-import Settings
-import SMS
-import Utils
+from .AT import AT
+from .Globals import Globals
+from .GPS import GPS
+from .ParserSMS import Parser
+from .Phone import Phone
+from .Settings import Settings
+from .SMS import SMS
+from .Utils import Utils
 
 __all__ = ["AT", "Globals", "GPS", "ParserSMS", "Phone", "Settings", "SMS", "Utils"]
