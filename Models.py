@@ -13,7 +13,7 @@ class Messages(BaseModel):
     message_contents: str
     partial_key: Optional[str] = None
     partial_count: Optional[int] = None
-    partial_number: Optional[int] = None
+    partial_index: Optional[int] = None
     is_partial: bool
     in_sim_memory: bool
     is_sent: Optional[bool] = None
