@@ -2,7 +2,6 @@ from datetime import datetime
 from Models import Messages
 from smspdudecoder.easy import read_incoming_sms
 
-
 class Parser:
     def parse_sms(
         sms_buffer: str, pdu_mode: bool = False
