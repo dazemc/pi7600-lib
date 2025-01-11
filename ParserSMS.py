@@ -3,8 +3,11 @@ from .Models import Messages
 from smspdudecoder.easy import read_incoming_sms
 
 class Parser:
+    def __init__(self):
+        pass
+
     def parse_sms(
-        sms_buffer: str, pdu_mode: bool = False
+        self, sms_buffer: str, pdu_mode: bool = False,
     ) -> (
         list
     ):  # TODO: check for PDU and parse PDU. PDU is much more informative than text mode.
@@ -54,63 +57,63 @@ class Parser:
                 )
 
         if pdu_mode:
-            parse_pdu(sms_buffer)
+            self.parse_pdu(sms_buffer)
 
 
-def status(status):
-    match status:
-        case "0":
-            return "REC UNREAD"
-        case "1":
-            return "REC READ"
-        case "2":
-            return "STO UNSENT"
-        case "3":
-            return "STO SENT"
+    def status(status):
+        match status:
+            case "0":
+                return "REC UNREAD"
+            case "1":
+                return "REC READ"
+            case "2":
+                return "STO UNSENT"
+            case "3":
+                return "STO SENT"
 
 
-def parse_pdu(pdu):
-    pdu_split = pdu.split("+CMGL: ")[1:-1]
-    pdu_split = [x.split("\n")[:-1] for x in pdu_split]
-    msg_head = pdu_split[0][0].split(",")
-    msgs = []
-    for pdu in pdu_split:
-        msg_head = pdu[0].split(",")
-        msg_idx = msg_head[0]
-        msg_status = status(msg_head[1])
-        msg_len = msg_head[3]
-        pdu_encoded = pdu[1]
-        pdu_decoded = read_incoming_sms(pdu_encoded)
-        msg_contents = pdu_decoded["content"]
-        fulldate = pdu_decoded["date"]
-        msg_sender = pdu_decoded["sender"]
-        is_partial = bool(type(pdu_decoded["partial"]) == dict)
-        partial_key = None
-        partial_count = None
-        partial_index = None
-        if is_partial:
-            partial_dict = pdu_decoded["partial"]
-            partial_key = partial_dict["reference"]
-            partial_count = int(partial_dict["parts_count"])
-            partial_index = int(partial_dict["part_number"])
-        formatted_date = fulldate.strftime("%Y-%m-%d")
-        formatted_time = fulldate.strftime("%H:%M:%S")
-        msgs.append(
-            {
-                "message_index": msg_idx,
-                "message_type": msg_status,
-                "message_length": msg_len,
-                "message_contents": msg_contents,
-                "message_originating_address": msg_sender,
-                "message_date": formatted_date,
-                "message_time": formatted_time,
-                "partial_key": partial_key,
-                "partial_count": partial_count,
-                "partial_index": partial_index,
-                "is_partial": bool(is_partial),
-                "in_sim_memory": True,
-                "pdu_decoded": pdu_decoded,
-            }
-        )
+    def parse_pdu(pdu):
+        pdu_split = pdu.split("+CMGL: ")[1:-1]
+        pdu_split = [x.split("\n")[:-1] for x in pdu_split]
+        msg_head = pdu_split[0][0].split(",")
+        msgs = []
+        for pdu in pdu_split:
+            msg_head = pdu[0].split(",")
+            msg_idx = msg_head[0]
+            msg_status = status(msg_head[1])
+            msg_len = msg_head[3]
+            pdu_encoded = pdu[1]
+            pdu_decoded = read_incoming_sms(pdu_encoded)
+            msg_contents = pdu_decoded["content"]
+            fulldate = pdu_decoded["date"]
+            msg_sender = pdu_decoded["sender"]
+            is_partial = bool(type(pdu_decoded["partial"]) == dict)
+            partial_key = None
+            partial_count = None
+            partial_index = None
+            if is_partial:
+                partial_dict = pdu_decoded["partial"]
+                partial_key = partial_dict["reference"]
+                partial_count = int(partial_dict["parts_count"])
+                partial_index = int(partial_dict["part_number"])
+            formatted_date = fulldate.strftime("%Y-%m-%d")
+            formatted_time = fulldate.strftime("%H:%M:%S")
+            msgs.append(
+                {
+                    "message_index": msg_idx,
+                    "message_type": msg_status,
+                    "message_length": msg_len,
+                    "message_contents": msg_contents,
+                    "message_originating_address": msg_sender,
+                    "message_date": formatted_date,
+                    "message_time": formatted_time,
+                    "partial_key": partial_key,
+                    "partial_count": partial_count,
+                    "partial_index": partial_index,
+                    "is_partial": bool(is_partial),
+                    "in_sim_memory": True,
+                    "pdu_decoded": pdu_decoded,
+                }
+            )
 
-        return [Messages(**msg) for msg in msgs]
+            return [Messages(**msg) for msg in msgs]
