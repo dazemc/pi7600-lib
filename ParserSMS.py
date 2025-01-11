@@ -2,12 +2,27 @@ from datetime import datetime
 from .Models import Messages
 from smspdudecoder.easy import read_incoming_sms
 
+
+def status(status):
+    match status:
+        case "0":
+            return "REC UNREAD"
+        case "1":
+            return "REC READ"
+        case "2":
+            return "STO UNSENT"
+        case "3":
+            return "STO SENT"
+
+
 class Parser:
     def __init__(self):
         pass
 
     def parse_sms(
-        self, sms_buffer: str, pdu_mode: bool = False,
+        self,
+        sms_buffer: str,
+        pdu_mode: bool = False,
     ) -> (
         list
     ):  # TODO: check for PDU and parse PDU. PDU is much more informative than text mode.
@@ -58,19 +73,6 @@ class Parser:
 
         if pdu_mode:
             self.parse_pdu(sms_buffer)
-
-
-    def status(status):
-        match status:
-            case "0":
-                return "REC UNREAD"
-            case "1":
-                return "REC READ"
-            case "2":
-                return "STO UNSENT"
-            case "3":
-                return "STO SENT"
-
 
     def parse_pdu(pdu):
         pdu_split = pdu.split("+CMGL: ")[1:-1]
