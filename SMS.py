@@ -59,6 +59,8 @@ class SMS:
                     self.ser.close()
 
     async def send_message(self, phone_number: str, text_message: str) -> bool:
+        if self.pdu_mode:
+            await self.set_data_mode(1)
         answer = await self.send_at('AT+CMGS="' + phone_number + '"', ">", TIMEOUT)
         if answer:
             self.ser.write(text_message.encode())
@@ -71,6 +73,7 @@ class SMS:
                     f"Message: {text_message}\n"
                     f"Message sent!"
                 )
+                await self.set_data_mode(0)
                 return True
             else:
                 print(
@@ -79,9 +82,11 @@ class SMS:
                     f"text_message: {text_message}\n"
                     f"Not sent!"
                 )
+                await self.set_data_mode(0)
                 return False
         else:
             print(f"error: {answer}")
+            await self.set_data_mode(0)
             return False
 
     async def delete_message(self, msg_idx: int) -> dict:
