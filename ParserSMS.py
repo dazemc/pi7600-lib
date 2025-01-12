@@ -75,7 +75,8 @@ class Parser:
             self.parse_pdu(sms_buffer)
 
     def parse_pdu(self, pdu):
-        pdu_split = pdu.split("+CMGL: ")[1:-1]
+        pdu_split = pdu.split("+CMGL: ")[1:]
+        print(pdu_split)
         pdu_split = [x.split("\n")[:-1] for x in pdu_split]
         msg_head = pdu_split[0][0].split(",")
         msgs = []
@@ -117,5 +118,4 @@ class Parser:
                     "pdu_decoded": pdu_decoded,
                 }
             )
-
         return [Messages(**msg) for msg in msgs]
