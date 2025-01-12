@@ -87,7 +87,7 @@ class Parser:
             msg_len = msg_head[3]
             pdu_encoded = pdu[1]
             pdu_decoded = read_incoming_sms(pdu_encoded)
-            msg_contents = pdu_decoded["content"].encode('utf-8').decode('utf-8')
+            msg_contents = pdu_decoded["content"]
             fulldate = pdu_decoded["date"]
             msg_sender = pdu_decoded["sender"]
             is_partial = bool(type(pdu_decoded["partial"]) == dict)
