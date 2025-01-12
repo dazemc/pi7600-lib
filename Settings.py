@@ -12,6 +12,7 @@ class Settings(metaclass=SingletonMeta):
         """
         self.at = AT(com=com, baudrate=baudrate)
         self.first_run = True
+        self.pdu_mode = self.get_data_mode()
 
     def __getattr__(self, name):
         try:
@@ -20,7 +21,7 @@ class Settings(metaclass=SingletonMeta):
             raise AttributeError(
                 f"'{type(self).__name__}' object has no attribute '{name}'"
             )
-
+    
     async def perform_initial_checks(self) -> None:
         """
         Initial environment checks asynchronously.
@@ -112,3 +113,12 @@ class Settings(metaclass=SingletonMeta):
             await self.send_at('AT+CSCS="GSM"', "OK", TIMEOUT)
         if mode == 0:
             await self.send_at('AT+CSCS="IRA"', "OK", TIMEOUT)
+
+
+    async def get_data_mode(self) -> int | None:
+        resp = await self.send_at('AT+CMGF?', 'OK', TIMEOUT)
+        if resp:
+            return not bool(int(resp[resp.find(' ') + 1]))
+        else:
+            print('Error reading sms data mode')
+            return None
