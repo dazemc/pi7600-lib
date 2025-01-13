@@ -68,7 +68,7 @@ class Parser:
                     return message_list
             except Exception as e:
                 print(
-                    f"ERROR: Parsing SMS: pdu_mode: {pdu_mode}, sms_buffer: {sms_buffer}"
+                    f"ERROR: Parsing SMS: pdu_mode: {pdu_mode}, sms_buffer: {sms_buffer}\n{e}"
                 )
 
         if pdu_mode:

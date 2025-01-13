@@ -36,7 +36,7 @@ class SMS:
         :return: list<dict>
         """
         try:
-            buffer = self.receive_messages(message_type)
+            buffer = self.receive_messages()
             return buffer
         except Exception as e:
             print("Error:", e)
@@ -51,7 +51,7 @@ class SMS:
         """
         while True:
             try:
-                buffer = self.receive_messages(message_type)
+                buffer = self.receive_messages()
                 return buffer
             except Exception as e:
                 print(f"Unhandled error: {e}")
