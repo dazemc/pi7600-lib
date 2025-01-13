@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from .Models import Messages
 from smspdudecoder.easy import read_incoming_sms
-
+from .Settings import *
 
 def status(status):
     match status:
@@ -17,7 +17,7 @@ def status(status):
 
 class Parser:
     def __init__(self):
-        pass
+        self.settings = Settings()
 
     def parse_sms(
         self,
@@ -77,6 +77,8 @@ class Parser:
     def parse_pdu(self, pdu):
         pdu_split = pdu.split("+CMGL: ")[1:]
         pdu_split = [x.split("\n")[:-1] for x in pdu_split]
+        if len(pdu_split) == 0:
+            return
         msg_head = pdu_split[0][0].split(",")
         msgs = []
         for pdu in pdu_split:
@@ -87,7 +89,9 @@ class Parser:
             pdu_encoded = pdu[1]
             pdu_decoded = read_incoming_sms(pdu_encoded)
             msg_contents = pdu_decoded["content"]
-            fulldate = pdu_decoded["date"]
+            fulldate = pdu_decoded["date"].replace(tzinfo=None)
+            timezone_offset = timedelta(hours=self.settings.timezone)
+            fulldate += timezone_offset
             msg_sender = pdu_decoded["sender"]
             is_partial = bool(type(pdu_decoded["partial"]) == dict)
             partial_key = None

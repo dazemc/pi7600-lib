@@ -2,6 +2,7 @@ from .Globals import *
 from .Utils import *
 from .AT import *
 from datetime import datetime
+import pytz
 
 class Settings(metaclass=SingletonMeta):
     def __init__(self, com=COM, baudrate=BAUDRATE) -> None:
@@ -142,5 +143,5 @@ class Settings(metaclass=SingletonMeta):
             formatted_datetime = f'{split_datetime[0]} {split_datetime[1][:8]}'
             datetime_object = datetime.strptime(formatted_datetime, '%y/%m/%d %H:%M:%S')
             self.datetime = datetime_object
-            self.timezone = timezone
+            self.timezone = int(timezone)
 
