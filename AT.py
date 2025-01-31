@@ -46,7 +46,6 @@ class AT:
             # Yield control to other tasks and wait a bit before checking again
             await asyncio.sleep(0.1)
 
-
     def send_at_sync(self, command: str, back: str, timeout: int) -> str:
         """
         Send an AT command and wait for the expected response.
@@ -73,7 +72,6 @@ class AT:
                 self.clear_buffer()
                 return f"ERROR: Timeout while waiting for response to '{command}'"
 
- 
     async def process_write_queue(self):
         """
         Asynchronously process the write queue and send commands.

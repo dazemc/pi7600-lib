@@ -4,6 +4,7 @@ from .AT import *
 from datetime import datetime
 import pytz
 
+
 class Settings(metaclass=SingletonMeta):
     def __init__(self, com=COM, baudrate=BAUDRATE) -> None:
         """
@@ -18,7 +19,6 @@ class Settings(metaclass=SingletonMeta):
         self.timezone = None
         self.get_datetime()
 
-
     def __getattr__(self, name):
         try:
             return getattr(self.at, name)
@@ -26,8 +26,6 @@ class Settings(metaclass=SingletonMeta):
             raise AttributeError(
                 f"'{type(self).__name__}' object has no attribute '{name}'"
             )
-    
-
 
     async def perform_initial_checks(self) -> None:
         """
@@ -121,27 +119,24 @@ class Settings(metaclass=SingletonMeta):
         if mode == 0:
             await self.send_at('AT+CSCS="IRA"', "OK", TIMEOUT)
 
-
     async def get_data_mode(self) -> int | None:
-        resp = await self.send_at('AT+CMGF?', 'OK', TIMEOUT)
+        resp = await self.send_at("AT+CMGF?", "OK", TIMEOUT)
         if resp:
-            return not bool(int(resp[resp.find(' ') + 1]))
+            return not bool(int(resp[resp.find(" ") + 1]))
         else:
-            print('Error reading sms data mode')
+            print("Error reading sms data mode")
             return None
 
-    
     def get_datetime(self):
-        resp = self.send_at_sync('AT+CCLK?', 'OK', TIMEOUT)
+        resp = self.send_at_sync("AT+CCLK?", "OK", TIMEOUT)
         if resp:
-            raw_datetime = resp.split('\n')[1]
+            raw_datetime = resp.split("\n")[1]
             idx_start = raw_datetime.find('"') + 1
             idx_end = raw_datetime.rfind('"')
             raw_datetime = raw_datetime[idx_start:idx_end]
-            split_datetime = raw_datetime.split(',')
+            split_datetime = raw_datetime.split(",")
             timezone = split_datetime[1][8] + str(int(int(split_datetime[1][9:]) / 4))
-            formatted_datetime = f'{split_datetime[0]} {split_datetime[1][:8]}'
-            datetime_object = datetime.strptime(formatted_datetime, '%y/%m/%d %H:%M:%S')
+            formatted_datetime = f"{split_datetime[0]} {split_datetime[1][:8]}"
+            datetime_object = datetime.strptime(formatted_datetime, "%y/%m/%d %H:%M:%S")
             self.datetime = datetime_object
             self.timezone = int(timezone)
-

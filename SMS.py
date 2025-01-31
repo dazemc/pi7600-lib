@@ -26,7 +26,7 @@ class SMS:
         :return: list<dict>
         """
         # self.set_data_mode(1)
-        answer = await self.send_at(f'AT+CMGL=4', "OK", TIMEOUT)
+        answer = await self.send_at(f"AT+CMGL=4", "OK", TIMEOUT)
         return self.parser.parse_pdu(answer)
 
     def read_message(self, message_type: str) -> list:
@@ -68,11 +68,7 @@ class SMS:
             # 'OK' here means the message sent?
             answer = await self.send_at("", "OK", SMS_SEND_TIMEOUT)
             if answer:
-                print(
-                    f"Number: {phone_number}\n"
-                    f"Message: {text_message}\n"
-                    f"Message sent!"
-                )
+                print(f"Number: {phone_number}\nMessage: {text_message}\nMessage sent!")
                 await self.set_data_mode(0)
                 return True
             else:

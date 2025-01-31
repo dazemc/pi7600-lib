@@ -3,6 +3,7 @@ from .Models import Messages
 from smspdudecoder.easy import read_incoming_sms
 from .Settings import *
 
+
 def status(status):
     match status:
         case "0":
@@ -23,9 +24,7 @@ class Parser:
         self,
         sms_buffer: str,
         pdu_mode: bool = False,
-    ) -> (
-        list
-    ):  # TODO: check for PDU and parse PDU. PDU is much more informative than text mode.
+    ) -> list:  # TODO: check for PDU and parse PDU. PDU is much more informative than text mode.
         """
         Parses the modem sms buffer into a list of dictionaries
         :param sms_buffer: str
